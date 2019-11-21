@@ -14,7 +14,7 @@ keine logik;
 {
 input: binärbild;
 projektion zeilen (horizontal);
--> logik teilung des bildes;
+-> teilung des bildes;
 } -> Eli
 
 {
