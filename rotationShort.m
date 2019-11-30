@@ -1,4 +1,8 @@
 image = imread('test2.jpg');
+% convert image to grayscale
+if ~ismatrix(image)
+    image = rgb2gray(image);
+end
 % find angle at which the image was taken
 angle = horizonFFT(image, 0.1);
 angle = mod(45+angle,90)-45;
