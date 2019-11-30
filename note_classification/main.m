@@ -11,44 +11,8 @@ image_bin = imbinarize(image_gray);
 image_bin = ~image_bin;
 
 
-figure 
+figure
 imshow(image_bin);
-
-% TODO:
-% line location from first projection
-% pixel amount of empty lines from second projection (adam)
-
-% 1. Schritt: notenhals? -> mit projektion rausfinden:  falls nicht: ganze note - sollte
-% ez sein da einzige stelle zw linien wo ned nur weiß
-
-% 1. Schritt: hat notenhals? -> mit projektion rausfinden
-
-% generell: notenblob ist immer entweder links unten am notenhals oder
-% rechts oben
-
-% schneller als achtel muss ich mir überlegen
-% -> wir haben koordinaten von notenlinien, also 
-
-% für verbundene achtel: rechten und linken rand checken (vertikale projektion) und schauen ob
-% pixalanzahl =! empty line, falls ja: verbundene achtel
-%       -> fall von einer seite verbunden: gehe bis zum notenhals und
-%       beobachte ob schwarze pixel mehr werden, dann ist auf selber seite
-%       des halses die note und es ist klar ob es oben rechts oder unten
-%       links ist
-%       -> fall von beiden seiten verbunden: genau wie oben. Wenn links
-%       neben notenhals mehr pixel als rechts, dann ist links note
-
-
-% für freie achtel: checken 
-
-
-
-% sirkes idee zur unterscheidung von viertel und achtel:
-%   Man weiß wieviele pixel zwischen den notenlinien sind und wie dick
-%   diese sind. Man zählt alle Zeilen am Bild wo es mind 1 schwarzen pixel gibt außer die von den Spalten wo
-%   der Notenhals ist. Wenn das mehr ist als Notenhals plus 1x abstand
-%   zwischen notenlinien (-> notenblob), dann ist es eine achtel oder
-%   schneller.
 
 vector_hor = sum(image_bin, 2);
 vector_ver = sum(image_bin, 1);
