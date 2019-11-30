@@ -1,7 +1,7 @@
 function main
-    path='F:\TUWien\EDBV\';
-    file=dir([path 'someone.jpg']);
-    image = imread([path file.name]);
+    %path='F:\TUWien\EDBV\';
+    %file=dir([path 'someone.jpg']);
+    image = imread('someone.png');
     
     original_image = image;
     
