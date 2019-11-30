@@ -31,11 +31,11 @@ function result = find_next_note(img, proj, current_idx, cut_width, cut_margin, 
         end
         
         %// Full Notes
-        if (proj(ii) >= 10 && ii > 15)
+        if (proj(ii) >= 10 + bottom_value && ii > 15)
             is_full_note = false;
             second_line = -1;
             for jj=(ii-10):(ii-1)
-                if(proj(jj) >= 10)
+                if(abs(proj(ii) - proj(jj)) < 3)
                     second_line = jj;
                 end
             end

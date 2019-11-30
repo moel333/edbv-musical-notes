@@ -33,7 +33,16 @@ function main
     
     test_img = sub_imgs{1,3};
     figure(55)
-    print_image_list(sub_imgs,22);
+    %print_image_list(sub_imgs,22);
+    
+    figure(111);
+    image_grey = rgb2gray(test_img);
+    image_binary = imbinarize(image_grey);
+    image_negative = imcomplement(image_binary);
+    projection = sum(image_negative, 1);
+    bar(projection);
+    figure(112);
+    imshow(image_grey)
     
     decompose(test_img, 1);
     

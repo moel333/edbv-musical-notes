@@ -13,7 +13,7 @@ function result = separate_notes(image, bottom_value)
     frag_end = 0;
     
     %SETTINGS
-    cut_width = 8;
+    cut_width = 13;
     cut_margin = (-2);
     
     cut_full_note_margin = (-2);
