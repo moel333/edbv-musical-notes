@@ -34,6 +34,31 @@ function main
     test_img = sub_imgs{1,5};
     %print_image_list(sub_imgs,22);
     
-    decompose(test_img, 1);
+    takt_list = decompose(test_img, 1);
     
+    % TODO FIX: THIS ONLY WORKS WITH THIS IMAGE AS 900 is an arbitrary
+    % threshold
+    image_grayy = rgb2gray(test_img);
+    image_binn = imbinarize(image_grayy);
+    image_binn = ~image_binn;
+    vector_hor = sum(image_binn, 2);
+    
+    line_points = find(vector_hor > 900);
+    
+    for ii=1:size(takt_list, 2)
+        % inside a takt
+        %print_image_list(takt_list{1,ii}, ii);
+        image_list = takt_list{1,ii};
+        for jj=1:size(image_list, 2)
+            %subplot(1, size(image_list, 2), jj);
+            %imshow(image_list{1,jj});
+            note = note_classification_main(image_list{1, jj}, line_points);
+            fst = note(1);
+            snd = note(2);
+            speed = note(3);
+            fst
+            snd
+            speed
+        end
+    end
 end
