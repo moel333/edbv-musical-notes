@@ -1,11 +1,11 @@
 %% probleme mit meinem part:
 %% punkte neben dem notenkopf werden noch nicht beachtet und zerstören potenziell den algo
-%% dasselbe gilt für vorzeichen
-%% wenn die linien von verbundenen achteln für die horizontale projektion zufällig genauso dick sind wie ein notenkopf
+%% dasselbe gilt für vorzeichen und jeglichen clutter
+%% wenn die linien von verbundenen achteln für die horizontale projektion zufällig genauso dick sind wie ein notenkopf:
 %%  -> verhalten undefined
 
 
-image_rgb = imread('note_achtel.png');
+image_rgb = imread('note_viertel.png');
 image_gray = rgb2gray(image_rgb);
 image_bin = imbinarize(image_gray);
 image_bin = ~image_bin;
@@ -46,6 +46,7 @@ if (note_stem_value < (note_lines_max_distance / 1.5))
     note_location = get_note_location(vector_hor, note_line_distance, note_stem_thickness, line_points);
     if (note_location == [0, 0])
         % special sign
+        note_speed
         return;
     end
     % whole note
@@ -55,17 +56,21 @@ if (note_stem_value < (note_lines_max_distance / 1.5))
     return;
 end
 
+note_location = get_note_location(vector_hor, note_line_distance, note_stem_thickness, line_points);
+note_location
+
 % check if it is faster than 1/4  by checking if there is a point where the
-% value in vector_hor is higher than the stem thickness but not the note
+% value in vector_hor is higher than the stem thickness but is not the note
 % blob
+% this is obviously very vulnerable to clutter and will throw false
+% positives if there is any clutter
 faster_than_quarter = false;
 if (has_clutter(vector_hor, note_stem_thickness, line_points, note_location))
     faster_than_quarter = true;
     faster_than_quarter
 end
 
-note_location = get_note_location(vector_hor, note_line_distance, note_stem_thickness, line_points);
-note_location
+
 if (~faster_than_quarter)
     %note is 1/2 or 1/4
     if (is_half_note(vector_hor, note_location, note_stem_thickness, line_points))
@@ -82,13 +87,14 @@ end
 % check if it is connected to out-of-scope notes
 side_stem_vec = zeros(length(vector_hor));
 if (vector_ver(1) > min_ver_pixels)
-    side_stem_vec = image_bin(:, note_stem_loc(1));
+    side_stem_vec = image_bin(:, note_stem_loc(1)-1);
 else
-    side_stem_vec = image_bin(:, note_stem_loc(length(note_stem_loc)));
+    side_stem_vec = image_bin(:, note_stem_loc(length(note_stem_loc))+1);
 end
 
 % go along side of stem and count black spots that are not the note or note
 % lines
+% this would seem very improvised again, but I believe it will work fine
 note_speed = get_connected_spots(side_stem_vec, line_points, note_location) + 3;
 
 note_speed

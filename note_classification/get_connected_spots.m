@@ -1,4 +1,3 @@
-
 function connected_spots = get_connected_spots(side_stem_vec, line_points, note_location)
     spot_counter = 0;
     in_spot = false;
