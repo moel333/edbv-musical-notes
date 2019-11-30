@@ -22,5 +22,7 @@ function result = decompose(image, line_count)
     for ii=1:size(takt_list, 2)
         print_image_list(takt_list{1,ii}, ii);
     end
+    
+    result = takt_list;
 
 end
