@@ -47,18 +47,20 @@ function main
     
     for ii=1:size(takt_list, 2)
         % inside a takt
-        %print_image_list(takt_list{1,ii}, ii);
         image_list = takt_list{1,ii};
         for jj=1:size(image_list, 2)
-            %subplot(1, size(image_list, 2), jj);
-            %imshow(image_list{1,jj});
+            % inside a single note
             note = note_classification_main(image_list{1, jj}, line_points);
+            % row index of note start in image
             fst = note(1);
+            % row index of note end in image
             snd = note(2);
+            % 1 = whole, 2 = half
             speed = note(3);
             fst
             snd
             speed
+            line_points
         end
     end
 end
