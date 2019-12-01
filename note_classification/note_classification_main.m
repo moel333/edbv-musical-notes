@@ -9,8 +9,8 @@ function classified_note = note_classification_main(image, line_points)
     image_bin = imbinarize(image_gray);
     image_bin = ~image_bin;
 
-    figure(200)
-    imshow(image_bin);
+    %figure(200)
+    %imshow(image_bin);
 
     vector_hor = sum(image_bin, 2);
     vector_ver = sum(image_bin, 1);

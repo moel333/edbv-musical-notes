@@ -61,6 +61,10 @@ function main
             snd
             speed
             line_points
+            img = image_list{1, jj};
+            img(fst:snd, :, 1) = 150;
+            figure(jj)
+            imshow(img);
         end
     end
 end
