@@ -1,8 +1,6 @@
 function main
-    %path='F:\TUWien\EDBV\';
-    %file=dir([path 'someone.jpg']);
-    image = imread('someone.png');
-    
+    [filename, path] = uigetfile(fullfile(pwd,'*.jpg')) ;
+    image = imread(fullfile(path, filename));
     original_image = image;
     
     if ~ismatrix(image)
