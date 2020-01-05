@@ -40,10 +40,10 @@ function classified_note = note_classification_main(image, line_points)
     % 1 = whole, 2 = half,...
     note_speed = 0;
     %check if there is no note stem
-    if (note_stem_value < (note_lines_max_distance / 1.5))
+    if (contains_note_stem(note_lines_max_distance, image_bin(:,note_stem_loc), note_stem_value)==0)
         % there is no note stem
         % -> special symbol or whole note
-        note_location = get_note_location(image_bin, vector_hor, note_line_distance, note_stem_thickness, line_points);
+        note_location = false(2);
         if (note_location == false(2))
             % special sign
             return;
@@ -54,7 +54,7 @@ function classified_note = note_classification_main(image, line_points)
         return;
     end
 
-    note_location = get_note_location(image_bin, vector_hor, note_line_distance, note_stem_thickness, line_points);
+    note_location = get_note_location(image_bin, vector_hor, note_line_distance, note_stem_thickness, line_points, 1);
     
 
     % check if it is faster than 1/4  by checking if there is a point where the

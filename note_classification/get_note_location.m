@@ -1,4 +1,4 @@
-function blob_loc = get_note_location(bin_img, vector_hor, note_line_distance, note_stem_thickness, line_points)
+function blob_loc = get_note_location(bin_img, vector_hor, note_line_distance, note_stem_thickness, line_points, two_dim)
     %note_line_thickness is needed when note is not inside the 5 note lines
     %for adding distances
     
@@ -23,13 +23,22 @@ function blob_loc = get_note_location(bin_img, vector_hor, note_line_distance, n
         if ((spot_length>=note_line_dist_low) && (spot_length<=note_line_dist_high))
             loc_1 = i - spot_length;
             loc_2 = i;
-            if (is_correct_width(bin_img(loc_1:loc_2, :), note_head_width, spot_length))
-                blob_loc(2) = i;
-                blob_loc(1) = i - spot_length;
-                break;
+            if (two_dim == 0)
+                blob_loc(1) = loc_1;
+                blob_loc(2) = loc_2;
+                return;
+            elseif (is_correct_width(bin_img(loc_1:loc_2, :), note_head_width, spot_length))
+                blob_loc(1) = loc_1;
+                blob_loc(2) = loc_2;
+                return;
             end
         end
     end
+    if (two_dim == 1)
+        % we didnt find anything, means this is a half note
+        blob_loc = get_note_location(bin_img, vector_hor, note_line_distance, note_stem_thickness, line_points, 0);
+    end
+    
 end
 
 function is_correct_width = is_correct_width(img_slice, note_head_width, note_head_height)
