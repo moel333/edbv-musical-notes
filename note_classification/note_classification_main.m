@@ -37,8 +37,8 @@ function classified_note = note_classification_main(image, line_points)
 
     note_location = zeros(2, 1);
     classified_note = zeros(3, 1);
-    % 1 = whole, 2 = half,...
-    note_speed = 0;
+    % 0.5=1/8, 2.0=1/2, 4.0=1
+    note_speed = -1;
     %check if there is no note stem
     if (contains_note_stem(note_lines_max_distance, image_bin(:,note_stem_loc), note_stem_value)==0)
         % there is no note stem
@@ -61,8 +61,8 @@ function classified_note = note_classification_main(image, line_points)
         % if it's whole note, get location
         if (symbol_class == 1)
             note_location = get_whole_note_location(vector_hor, note_line_distance, note_stem_thickness, line_points);
-            note_speed = 1;
-            classified_note = [note_location(1); note_location(2); note_speed];
+            note_tempo = 4.0;
+            classified_note = [note_location(1); note_location(2); note_tempo];
         end
         return;
     end
