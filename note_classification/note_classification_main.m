@@ -50,7 +50,7 @@ function classified_note = note_classification_main(image, line_points)
         
         % output by function: 1=full note, 2=full/half pause, 3=quarter pause,
         % 4=eighth pause, 5=vorzeichen
-        symbol_class = symbol_classification(image_bin, vector_hor, vector_ver, line_points, note_line_distance);
+        symbol_class = symbol_classification(vector_hor, vector_ver, note_line_distance);
         
         % if it's full/half pause or vorzeichen, classify again
         if (symbol_class == 2)

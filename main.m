@@ -49,6 +49,9 @@ function main
         for j=1:size(image_list, 2)
             % inside a single note
             note = note_classification_main(image_list{1, j}, line_points);
+            if (length(note)==1)
+                continue;
+            end
             % row index of note start in image
             fst = note(1);
             % row index of note end in image
@@ -62,9 +65,6 @@ function main
                 %figure(j*15);
                 %imshow(img);
             end
-            fst
-            snd
-            speed
         end
         print_image_list(image_list, i+15);
     end
