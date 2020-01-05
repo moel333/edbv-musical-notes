@@ -55,7 +55,7 @@ function classified_note = note_classification_main(image, line_points, is_trebl
         if (symbol_class == 1)
             note_location = get_whole_note_location(vector_hor, note_line_distance, note_stem_thickness, line_points);
             note_tempo = 4.0;
-            if (contains_dot(image_bin(note_location(1):note_location(2),:)))
+            if (contains_dot(image_bin(max(note_location(1), 1):max(note_location(2), 1),:)))
                 note_tempo = double(note_tempo) * 1.5;
             end
             midi_pitch = get_midi_pitch(line_points, note_line_distance, note_location, is_treble_clef);

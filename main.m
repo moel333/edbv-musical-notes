@@ -29,7 +29,7 @@ function main
         sub_imgs = split_images(original_image, split_pos);
     end
     
-    test_img = sub_imgs{1,5};
+    test_img = sub_imgs{1,1};
     %print_image_list(sub_imgs,22);
     
     takt_list = decompose(test_img, 1);
@@ -61,7 +61,7 @@ function main
             midi_pitch = note(4);
             img = image_list{1, j};
             if (snd>0 && snd>0)
-                img(fst:snd, :, 1) = 150;
+                img(max(fst, 1):max(snd, 1), :, 1) = 150;
                 if (length(note)==5)
                     img(:, note(5):note(5)+1, 2) = 150;
                 end
