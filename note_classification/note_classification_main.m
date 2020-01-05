@@ -3,7 +3,7 @@
 %% dasselbe gilt für vorzeichen und jeglichen clutter
 %% wenn die linien von verbundenen achteln für die horizontale projektion zufällig genauso dick sind wie ein notenkopf:
 %%  -> verhalten undefined
-function classified_note = note_classification_main(image, line_points)
+function classified_note = note_classification_main(image, line_points, is_treble_clef)
     %image_rgb = imread('note_viertel.png');
     image_gray = rgb2gray(image);
     image_bin = imbinarize(image_gray);
@@ -31,32 +31,25 @@ function classified_note = note_classification_main(image, line_points)
     note_line_distance = line_locations(2,1) - line_locations(1,2);
     note_stem_thickness = 1 + note_stem_loc(length(note_stem_loc)) - note_stem_loc(1);
 
-
-
     %%%             ALGORITHM               %%%
 
     note_location = zeros(2, 1);
-    classified_note = zeros(3, 1);
+    classified_note = zeros(4, 1);
+    midi_pitch = 0;
     % 0.5=1/8, 2.0=1/2, 4.0=1
-    note_tempo = -1;
+    note_tempo = 0;
     %check if there is no note stem
     if (contains_note_stem(note_lines_max_distance, image_bin(:,note_stem_loc), note_stem_value)==0)
         % there is no note stem
         % -> special symbol or whole note
         
         % classify by shape
-        % output overall symbols: location of note=full note, 1= full pause, 2=half pause, 3=quarter pause,
+        % output overall symbols: location of note=full note, 1=full pause, 2=half pause, 3=quarter pause,
         % 4=eighth pause, 5=vorzeichen
         
         % output by function: 1=full note, 2=full/half pause, 3=quarter pause,
         % 4=eighth pause, 5=vorzeichen
         symbol_class = symbol_classification(vector_hor, vector_ver, note_line_distance);
-        
-        % if it's full/half pause or vorzeichen, classify again
-        if (symbol_class == 2)
-            symbol_class = pause_classification(vector_hor, line_points);
-        end
-        classified_note = symbol_class;
         
         % if it's whole note, get location
         if (symbol_class == 1)
@@ -65,9 +58,29 @@ function classified_note = note_classification_main(image, line_points)
             if (contains_dot(image_bin(note_location(1):note_location(2),:)))
                 note_tempo = double(note_tempo) * 1.5;
             end
-   
-            classified_note = [note_location(1); note_location(2); note_tempo];
+            midi_pitch = get_midi_pitch(line_points, note_line_distance, note_location, is_treble_clef);
+            classified_note = [note_location(1); note_location(2); note_tempo; midi_pitch];
+            return;
         end
+        
+        % if it's full/half pause or vorzeichen, classify again
+        if (symbol_class == 2)
+            symbol_class = pause_classification(vector_hor, line_points);
+        end
+        if (symbol_class == 5)
+            % differentiate between vorzeichen type
+        end
+        switch symbol_class
+            case 1
+                note_tempo = 4.0;
+            case 2
+                note_tempo = 2.0;
+            case 3
+                note_tempo = 1.0;
+            case 4
+                note_tempo = 0.5;
+        end
+        classified_note = [symbol_class; note_tempo];
         return;
     end
 
@@ -95,14 +108,16 @@ function classified_note = note_classification_main(image, line_points)
             if (contains_dot(image_bin(note_location(1):note_location(2),:)))
                 note_tempo = double(note_tempo) * 1.5;
             end
-            classified_note = [note_location(1); note_location(2); note_tempo];
+            midi_pitch = get_midi_pitch(line_points, note_line_distance, note_location, is_treble_clef);
+            classified_note = [note_location(1); note_location(2); note_tempo; midi_pitch; note_stem_loc(1)];
             return;
         else 
             note_tempo = 1.0;
             if (contains_dot(image_bin(note_location(1):note_location(2),:)))
                 note_tempo = double(note_tempo) * 1.5;
             end
-            classified_note = [note_location(1); note_location(2); note_tempo];
+            midi_pitch = get_midi_pitch(line_points, note_line_distance, note_location, is_treble_clef);
+            classified_note = [note_location(1); note_location(2); note_tempo; midi_pitch; note_stem_loc(1)];
             return;
         end
         
@@ -126,7 +141,8 @@ function classified_note = note_classification_main(image, line_points)
         note_tempo = double(note_tempo) * 1.5;
 	end
  
-    classified_note = [note_location(1); note_location(2); note_tempo];
+    midi_pitch = get_midi_pitch(line_points, note_line_distance, note_location, is_treble_clef);
+    classified_note = [note_location(1); note_location(2); note_tempo; midi_pitch; note_stem_loc(1)];
 end
 
 

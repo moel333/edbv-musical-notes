@@ -48,8 +48,8 @@ function main
         image_list = takt_list{1,i};
         for j=1:size(image_list, 2)
             % inside a single note
-            note = note_classification_main(image_list{1, j}, line_points);
-            if (length(note)==1)
+            note = note_classification_main(image_list{1, j}, line_points, 1);
+            if (length(note)<4)
                 continue;
             end
             % row index of note start in image
@@ -58,9 +58,13 @@ function main
             snd = note(2);
             % 1 = whole, 2 = half
             speed = note(3);
+            midi_pitch = note(4);
             img = image_list{1, j};
             if (snd>0 && snd>0)
                 img(fst:snd, :, 1) = 150;
+                if (length(note)==5)
+                    img(:, note(5):note(5)+1, 2) = 150;
+                end
                 image_list{1, j} = img;
                 %figure(j*15);
                 %imshow(img);
