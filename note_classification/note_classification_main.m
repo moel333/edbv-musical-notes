@@ -45,13 +45,16 @@ function classified_note = note_classification_main(image, line_points)
         % -> special symbol or whole note
         
         % classify by shape
-        % output: 1=full note, 2=full/half pause, 3=quarter pause,
+        % output overall symbols: location of note=full note, 1= full pause, 2=half pause, 3=quarter pause,
+        % 4=eighth pause, 5=vorzeichen
+        
+        % output by function: 1=full note, 2=full/half pause, 3=quarter pause,
         % 4=eighth pause, 5=vorzeichen
         symbol_class = symbol_classification(image_bin, vector_hor, vector_ver, line_points, note_line_distance);
         
         % if it's full/half pause or vorzeichen, classify again
         if (symbol_class == 2)
-            %symbol_class = 
+            symbol_class = pause_classification(vector_hor, line_points);
         end
         classified_note = symbol_class;
         
