@@ -9,12 +9,13 @@ function classified_note = note_classification_main(image, line_points)
     image_bin = imbinarize(image_gray);
     image_bin = ~image_bin;
 
-    %figure(200)
+    %figure(200);
     %imshow(image_bin);
 
     vector_hor = sum(image_bin, 2);
     vector_ver = sum(image_bin, 1);
 
+    
     %line_points = get_line_points(vector_hor, vector_ver);
     % matrix with start and end point of each note line
     % dimensions: 5,2
@@ -42,8 +43,8 @@ function classified_note = note_classification_main(image, line_points)
     if (note_stem_value < (note_lines_max_distance / 1.5))
         % there is no note stem
         % -> special symbol or whole note
-        note_location = get_note_location(vector_hor, note_line_distance, note_stem_thickness, line_points);
-        if (note_location == [0, 0])
+        note_location = get_note_location(image_bin, vector_hor, note_line_distance, note_stem_thickness, line_points);
+        if (note_location == false(2))
             % special sign
             return;
         end
@@ -53,7 +54,7 @@ function classified_note = note_classification_main(image, line_points)
         return;
     end
 
-    note_location = get_note_location(vector_hor, note_line_distance, note_stem_thickness, line_points);
+    note_location = get_note_location(image_bin, vector_hor, note_line_distance, note_stem_thickness, line_points);
     
 
     % check if it is faster than 1/4  by checking if there is a point where the
