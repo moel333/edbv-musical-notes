@@ -9,8 +9,8 @@ function classified_note = note_classification_main(image, line_points, is_trebl
     image_bin = imbinarize(image_gray);
     image_bin = ~image_bin;
 
-    figure(220);
-    imshow(image_bin);
+    %figure(220);
+    %imshow(image_bin);
 
     vector_hor = sum(image_bin, 2);
     vector_ver = sum(image_bin, 1);
@@ -25,7 +25,7 @@ function classified_note = note_classification_main(image, line_points, is_trebl
     % distance between first and last note line
     note_lines_max_distance = line_points(size(line_points)) - line_points(1);
     note_lines_max_distance = note_lines_max_distance(1);
-    % locations of the note stem is it exists
+    % locations of the note stem if it exists
     [note_stem_value, note_stem_loc] = max(vector_ver);
     % distance between two note lines
     note_line_distance = line_locations(2,1) - line_locations(1,2);
@@ -33,9 +33,6 @@ function classified_note = note_classification_main(image, line_points, is_trebl
 
     %%%             ALGORITHM               %%%
 
-    note_location = zeros(2, 1);
-    classified_note = zeros(4, 1);
-    midi_pitch = 0;
     % 0.5=1/8, 2.0=1/2, 4.0=1
     note_tempo = 0;
     %check if there is no note stem
@@ -84,10 +81,16 @@ function classified_note = note_classification_main(image, line_points, is_trebl
         return;
     end
 
+    if(note_stem_loc(1) == 1 || note_stem_loc(length(note_stem_loc)) == length(vector_ver))
+        % something went wrong
+        classified_note = [-1; -1; -1; -1; note_stem_loc(1)];
+        return;
+    end
+    
     note_location = get_note_location(image_bin, vector_hor, note_line_distance, note_stem_thickness, line_points, 1);
     if (note_location == false(2))
         % something went wrong 
-        classified_note = [-1; -1; -1;];
+        classified_note = [-1; -1; -1; -1; note_stem_loc(1)];
         return;
     end
     % check if it is faster than 1/4  by checking if there is a point where the
