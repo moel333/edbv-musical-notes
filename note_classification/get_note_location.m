@@ -14,7 +14,7 @@ function blob_loc = get_note_location(bin_img, vector_hor, note_line_distance, n
         if (vector_hor(i) > note_stem_thickness)
             if (ismember(i, line_points) && (spot_length == 0))
                 spot_length = 0;
-            elseif (spot_length < note_line_distance)
+            elseif (spot_length < note_line_dist_high)
                 spot_length = spot_length + 1;
             end
         else
@@ -46,19 +46,19 @@ function is_correct_width = is_correct_width(img_slice, note_head_width, note_he
     vector_ver = sum(img_slice, 1);
     cutoff = min(vector_ver);
     is_correct_width = 0;
-    
-    for i = 1 : length(vector_ver)
+    for i = 1 : (length(vector_ver)-1)
         cur_value = vector_ver(i);
-        if (cur_value > cutoff)
-            spot_length = spot_length + 1;
-        elseif ((spot_length >= note_head_height) && (spot_length <= note_head_width))
+        if ((spot_length >= note_head_height) && (spot_length <= note_head_width) && (cur_value > cutoff))
             % note must be of some thickness somewhere in the middle
             index = i - ceil(spot_length/2);
             if (vector_ver(index) > (note_head_height*0.9))
-                is_correct_width = 1;
-                return;
+                if (vector_ver(i+1)<=cutoff)
+                    is_correct_width = 1;
+                    return;
+                end
             end
-            
+        elseif (cur_value > cutoff)
+            spot_length = spot_length + 1;
         else
             spot_length = 0;
         end

@@ -43,10 +43,13 @@ function main
     
     line_points = find(vector_hor > 900);
     
-    for i=1:size(takt_list, 2)
+    for i=1:size(takt_list, 2)-1
         % inside a takt
         image_list = takt_list{1,i};
         for j=1:size(image_list, 2)
+            if (j~=7)
+                continue;
+            end
             % inside a single note
             note = note_classification_main(image_list{1, j}, line_points);
             % row index of note start in image

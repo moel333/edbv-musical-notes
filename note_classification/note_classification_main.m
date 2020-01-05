@@ -43,14 +43,24 @@ function classified_note = note_classification_main(image, line_points)
     if (contains_note_stem(note_lines_max_distance, image_bin(:,note_stem_loc), note_stem_value)==0)
         % there is no note stem
         % -> special symbol or whole note
-        note_location = false(2);
-        if (note_location == false(2))
-            % special sign
-            return;
+        
+        % classify by shape
+        % output: 1=full note, 2=full/half pause, 3=quarter pause,
+        % 4=eighth pause, 5=vorzeichen
+        symbol_class = symbol_classification(image_bin, vector_hor, vector_ver, line_points, note_line_distance);
+        
+        % if it's full/half pause or vorzeichen, classify again
+        if (symbol_class == 2)
+            %symbol_class = 
         end
-        % whole note
-        note_speed = 1;
-        classified_note = [note_location(1); note_location(2); note_speed];
+        classified_note = symbol_class;
+        
+        % if it's whole note, get location
+        if (symbol_class == 1)
+            note_location = get_whole_note_location(vector_hor, note_line_distance, note_stem_thickness, line_points);
+            note_speed = 1;
+            classified_note = [note_location(1); note_location(2); note_speed];
+        end
         return;
     end
 
