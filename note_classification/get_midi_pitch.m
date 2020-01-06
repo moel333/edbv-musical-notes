@@ -15,6 +15,8 @@ function pitch = get_g_pitch(line_points, line_distance, note_location)
     %   one inc/dec means half higher/lower pitch, so d = 62
     % so the next higher value directly on a line will be:
     % e = 64
+    % every one note difference jumps by a value of 2 per step, except from
+    % e to f
     e4_position = max(line_points);
     pitch = 64 + get_relative_pitch(line_distance, note_location, e4_position);
 end
@@ -25,6 +27,8 @@ function pitch = get_f_pitch(line_points, line_distance, note_location)
 end
 
 function pitch = get_relative_pitch(line_distance, note_location, base_position)
+    % numbers for e and f:
+    %   64 & 65, 52 & 53
     note_position = note_location(2) - abs(note_location(2)-note_location(1));
     multiplier = 1;
     lower = base_position;
@@ -51,5 +55,11 @@ function pitch = get_relative_pitch(line_distance, note_location, base_position)
         pitch = pitch + 4;
     end
     pitch = pitch * multiplier;
+    if (base_position == 64 && pitch >= 65)
+        % we counted 2 for the jump from e to f, which is wrong
+        pitch = pitch-1;
+    elseif (base_position == 43 && pitch >= 53)
+        pitch = pitch-1;
+    end
         
 end
